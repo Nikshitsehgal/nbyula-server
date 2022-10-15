@@ -13,38 +13,12 @@ exports.setLogIn = (req, res) => {
     })
     .then((data) => {
       res.send(data);
-      console.log(data);
     })
     .catch((err) => console.log(err));
 };
 
-// exports.create = (req, res) => {
-//   //validate request
-//   if (!req.body) {
-//     res.status(400).send({ message: "Content cannot be empty!" });
-//     return;
-//   }
-
-//   //new field
-//   const contactFormData = new model.contactFormDataDB({
-//     name: req.body.name,
-//     email: req.body.email,
-//     message: req.body.message,
-//   });
-
-//   contactFormData
-//     .save(contactFormData)
-//     .then((data) => res.send("Saved Successfully"))
-//     .catch((err) =>
-//       res.status(500).send({
-//         message: err.message || "some error occured while create operation",
-//       })
-//     );
-// };
-
 exports.setSignUp = (req, res) => {
   if (!req.body) {
-    console.log("Got it here");
     res.status(400).send({ message: "Content cannot be empty!" });
     return;
   }
@@ -68,89 +42,39 @@ exports.setSignUp = (req, res) => {
     );
 };
 
-// exports.getmessages = (req, res) => {
-//   model.contactFormDataDB
-//     .find({})
-//     .sort({ created_at: -1 })
-//     .then((data) => res.send(data))
-//     .catch((err) => console.log(err));
-// };
+exports.updateUserData = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({ message: "Content cannot be empty!" });
+    return;
+  }
+  console.log(req.body);
+  model.signUpDB
+    .updateOne(
+      { _id: req.body._id },
+      {
+        $set: {
+          username: req.body.username,
+          fullName: req.body.fullName,
+          email: req.body.email,
+          password: req.body.password,
+        },
+      }
+    )
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) =>
+      res.status(500).send({
+        message: err.message || "some error occured while creating the account",
+      })
+    );
+};
 
-// exports.getskills = (req, res) => {
-//   model.skillDataDB
-//     .find({})
-//     .then((data) => res.send(data))
-//     .catch((err) => console.log(err));
-// };
-
-// exports.createSkill = (req, res) => {
-//   if (!req.body) {
-//     res.status(400).send({ message: "Content cannot be empty!" });
-//     return;
-//   }
-
-//   const skillData = new model.skillDataDB({
-//     type: req.body.type,
-//     skill: req.body.skill,
-//   });
-
-//   skillData
-//     .save(skillData)
-//     .then((data) => res.send("Saved"))
-//     .catch((err) =>
-//       res.status(500).send({
-//         message: err.message || "some error occured while create operation",
-//       })
-//     );
-// };
-
-// exports.deleteskill = (req, res) => {
-//   model.skillDataDB
-//     .findByIdAndDelete(req.body.id)
-//     .then((data) => res.send(data))
-//     .catch((err) =>
-//       res.status(500).send({
-//         message: err.message || "some error occured while delete operation",
-//       })
-//     );
-// };
-
-// exports.getPortfolio = (req, res) => {
-//   model.portfolioDataDB
-//     .find({})
-//     .then((data) => res.send(data))
-//     .catch((err) => console.log(err));
-// };
-
-// exports.createPortfolio = (req, res) => {
-//   if (!req.body) {
-//     res.status(400).send({ message: "Content cannot be empty!" });
-//     return;
-//   }
-
-//   const portfolioData = new model.portfolioDataDB({
-//     type: req.body.type,
-//     name: req.body.name,
-//     link: req.body.link,
-//   });
-
-//   portfolioData
-//     .save(portfolioData)
-//     .then((data) => res.send("Saved"))
-//     .catch((err) =>
-//       res.status(500).send({
-//         message: err.message || "some error occured while create operation",
-//       })
-//     );
-// };
-
-// exports.deletePortfolio = (req, res) => {
-//   model.portfolioDataDB
-//     .findByIdAndDelete(req.body.id)
-//     .then((data) => res.send(data))
-//     .catch((err) =>
-//       res.status(500).send({
-//         message: err.message || "some error occured while delete operation",
-//       })
-//     );
-// };
+exports.getUserData = (req, res) => {
+  model.signUpDB
+    .findOne({ email: req.params.email })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => console.log(err));
+};
